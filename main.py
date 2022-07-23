@@ -1,8 +1,12 @@
 from flask import Flask, render_template, request
 import requests
+import os
+import smtplib
 
 
 app = Flask(__name__)
+MY_EMAIL = os.environ.get('EMAIL')
+MY_PASSWORD = os.environ.get('PASSWORD')
 
 
 URL = 'https://api.npoint.io/98b105151915c6944658'
@@ -33,6 +37,19 @@ def contact_page():
         print(request.form['email'])
         print(request.form['phone'])
         print(request.form['message'])
+        message = 'Subject: A Contact Message was Sent\n\n'
+        message += f"NAME: {request.form['username']}\nEMAIL: {request.form['email']}" \
+                   f"\nPHONE: {request.form['phone']}\nMESSAGE: {request.form['message']}"
+
+        try:
+            with smtplib.SMTP("smtp.mail.yahoo.com", port=587) as smtp_connection:
+                smtp_connection.starttls()
+                smtp_connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+                smtp_connection.sendmail(from_addr=MY_EMAIL,
+                                         to_addrs=MY_EMAIL,
+                                         msg=message)
+        except Exception as error_message:
+            print(f'Something Went Wrong In Sending the Email:\n{error_message}')
         return render_template('contact.html', method=request.method)
     else:
         print("GET")
