@@ -20,18 +20,23 @@ def about_page():
     return render_template('about.html')
 
 
-@app.route('/contact.html')
+# @app.route('/contact')
+# def contact_page():
+#     return render_template('contact.html')
+
+
+@app.route('/contact', methods=['POST', 'GET'])
 def contact_page():
-    return render_template('contact.html')
-
-
-@app.route('/form-entry', methods=['POST', 'GET'])
-def receive_data():
-    print(request.form['username'])
-    print(request.form['email'])
-    print(request.form['phone'])
-    print(request.form['message'])
-    return f'<h1>Successfully Sent Your Message</h1>'
+    if request.method == 'POST':
+        print("POST")
+        print(request.form['username'])
+        print(request.form['email'])
+        print(request.form['phone'])
+        print(request.form['message'])
+        return render_template('contact.html', method=request.method)
+    else:
+        print("GET")
+        return render_template('contact.html', method=request.method)
 
 
 @app.route('/post/<blog_id>')
