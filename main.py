@@ -11,7 +11,6 @@ MY_PASSWORD = os.environ.get('PASSWORD')
 
 URL = 'https://api.npoint.io/98b105151915c6944658'
 response_json = requests.get(url=URL).json()
-# print(response_json)
 
 
 @app.route('/')
@@ -24,19 +23,9 @@ def about_page():
     return render_template('about.html')
 
 
-# @app.route('/contact')
-# def contact_page():
-#     return render_template('contact.html')
-
-
 @app.route('/contact', methods=['POST', 'GET'])
 def contact_page():
     if request.method == 'POST':
-        print("POST")
-        print(request.form['username'])
-        print(request.form['email'])
-        print(request.form['phone'])
-        print(request.form['message'])
         message = 'Subject: A Contact Message was Sent\n\n'
         message += f"NAME: {request.form['username']}\nEMAIL: {request.form['email']}" \
                    f"\nPHONE: {request.form['phone']}\nMESSAGE: {request.form['message']}"
@@ -52,7 +41,6 @@ def contact_page():
             print(f'Something Went Wrong In Sending the Email:\n{error_message}')
         return render_template('contact.html', method=request.method)
     else:
-        print("GET")
         return render_template('contact.html', method=request.method)
 
 
@@ -60,7 +48,6 @@ def contact_page():
 def post_page(blog_id):
     page_post = {}
     for post in response_json:
-        print(post)
         if post['id'] == int(blog_id):
             page_post = post
             break
